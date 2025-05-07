@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   const dbName = config.MONGO_DB_NAME
 
   const body = await readBody(event)
-  const { email, password } = body
+  const { email, password, first_name, last_name } = body
 
   if (!email || !password) {
     return { status: 'error', message: 'Email and password are required.' }
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
       return { status: 'error', message: 'Email already registered.' }
     }
 
-    await users.insertOne({ email, password }) // You should hash this in real apps
+    await users.insertOne({ email, password, first_name, last_name }) // You should hash this in real apps
 
     return { status: 'success', message: 'User registered successfully.' }
   } catch (err) {
