@@ -13,7 +13,7 @@
         </p>
   
         <!-- Get Started Button -->
-        <NuxtLink to="/signup" class="inline-block bg-blue-600 text-white text-base font-medium px-6 py-3 rounded-md hover:bg-blue-700 transition">
+        <NuxtLink to="/login" class="inline-block bg-blue-600 text-white text-base font-medium px-6 py-3 rounded-md hover:bg-blue-700 transition">
           Get Started →
         </NuxtLink>
   

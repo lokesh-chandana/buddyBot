@@ -1,5 +1,3 @@
-// server/api/signup.js
-
 import { MongoClient } from 'mongodb'
 
 export default defineEventHandler(async (event) => {
@@ -8,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const dbName = config.MONGO_DB_NAME
 
   const body = await readBody(event)
-  const { email, password, first_name, last_name } = body
+  const { email, password } = body
 
   if (!email || !password) {
     return { status: 'error', message: 'Email and password are required.' }
@@ -21,14 +19,25 @@ export default defineEventHandler(async (event) => {
     const db = client.db(dbName)
     const users = db.collection('users')
 
-    const existing = await users.findOne({ email })
-    if (existing) {
-      return { status: 'error', message: 'Email already registered.' }
+    const user = await users.findOne({ email })
+
+    if (!user) {
+      return { status: 'error', message: 'Invalid email or password.' }
     }
 
-    await users.insertOne({ email, password, first_name, last_name })
+    if (user.password !== password) {
+      return { status: 'error', message: 'Invalid email or password.' }
+    }
 
-    return { status: 'success', message: 'User registered successfully.' }
+    return {
+      status: 'success',
+      message: 'Login successful.',
+      user: {
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+      }
+    }
   } catch (err) {
     console.error(err)
     return { status: 'error', message: 'Server error.' }
